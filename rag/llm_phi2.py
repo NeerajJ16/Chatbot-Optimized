@@ -1,22 +1,24 @@
-# rag/llm_phi2.py
-import torch
-from transformers import AutoModelForCausalLM, AutoTokenizer
+import os
+import streamlit as st
+from openai import OpenAI
 
 _LLM_INSTANCE = None
 
 class Phi2LLM:
-    def __init__(self, model_name="microsoft/phi-2"):
-        print(f"Loading Phi-2 model ({model_name})...")
-
-        self.tokenizer = AutoTokenizer.from_pretrained(model_name)
-
-        self.model = AutoModelForCausalLM.from_pretrained(
-            model_name,
-            torch_dtype=torch.float16,
-            device_map="auto"
+    def __init__(self, model_name="openai/gpt-oss-20b:groq"):
+        # We use st.secrets for safety on Streamlit Cloud
+        # Ensure HF_TOKEN is added to your Streamlit App Secrets
+        api_key = st.secrets.get("HF_TOKEN") or os.environ.get("HF_TOKEN")
+        
+        # Pointing to the Hugging Face OpenAI-compatible router
+        self.client = OpenAI(
+            base_url="https://router.huggingface.co/v1",
+            api_key=api_key,
         )
+        self.model_name = model_name
 
-    def generate_answer(self, context, question, max_tokens=256):
+    def generate_answer(self, context, question, max_tokens=500):
+        # Using your exact professional prompt format
         prompt = f"""You are a professional portfolio assistant representing Neeraj Jawahirani.
 
 Use ONLY the information provided in the context below.
@@ -31,7 +33,6 @@ Instructions:
 - If multiple entries are relevant, summarize them clearly.
 - Only say "I don’t have that information." if no entry is relevant.
 
-
 Context:
 {context}
 
@@ -40,29 +41,25 @@ Question:
 
 Answer:
 """
-
-        inputs = self.tokenizer(prompt, return_tensors="pt").to(self.model.device)
-
-        outputs = self.model.generate(
-            **inputs,
-            max_new_tokens=max_tokens,
-            do_sample=False,
-            temperature=0.2,
-            pad_token_id=self.tokenizer.eos_token_id
-        )
-
-        # ✅ Extract ONLY new tokens
-        generated_tokens = outputs[0][inputs["input_ids"].shape[-1]:]
-        answer = self.tokenizer.decode(
-            generated_tokens,
-            skip_special_tokens=True
-        )
-
-        return answer.strip()
+        try:
+            # We use the Chat Completion interface which the Router requires
+            completion = self.client.chat.completions.create(
+                model=self.model_name,
+                messages=[
+                    {"role": "user", "content": prompt}
+                ],
+                max_tokens=max_tokens,
+                temperature=0.2,
+            )
+            return completion.choices[0].message.content.strip()
+            
+        except Exception as e:
+            return f"Error connecting to the AI service: {str(e)}"
 
 
 def get_llm():
     global _LLM_INSTANCE
     if _LLM_INSTANCE is None:
+        # We keep the name Phi2LLM but it now runs GPT-OSS-20B via API
         _LLM_INSTANCE = Phi2LLM()
     return _LLM_INSTANCE
