@@ -5,15 +5,23 @@ from openai import OpenAI
 _LLM_INSTANCE = None
 
 class Phi2LLM:
-    def __init__(self, model_name="openai/gpt-oss-20b:groq"):
-        # We use st.secrets for safety on Streamlit Cloud
-        # Ensure HF_TOKEN is added to your Streamlit App Secrets
-        api_key = st.secrets.get("HF_TOKEN") or os.environ.get("HF_TOKEN")
+    def __init__(self, model_name="google/gemma-2-2b-it"):
+        # 1. Pull the token from Streamlit Secrets
+        hf_token = st.secrets.get("HF_TOKEN")
         
-        # Pointing to the Hugging Face OpenAI-compatible router
+        # 2. Check if it's missing and provide a clear warning
+        if not hf_token:
+            st.error("Missing HF_TOKEN! Please add it to Streamlit Cloud -> Settings -> Secrets.")
+            # Fallback for local testing if you forgot the secrets file
+            hf_token = os.environ.get("HF_TOKEN", "no_token_found")
+
+        # 3. SET the environment variable manually to satisfy the OpenAI client
+        os.environ["OPENAI_API_KEY"] = hf_token 
+        
+        # 4. Initialize the client
         self.client = OpenAI(
             base_url="https://router.huggingface.co/v1",
-            api_key=api_key,
+            api_key=hf_token, # We pass it here AND as an env var above
         )
         self.model_name = model_name
 
