@@ -5,7 +5,7 @@ from openai import OpenAI
 _LLM_INSTANCE = None
 
 class Phi2LLM:
-    def __init__(self, model_name="google/gemma-2-2b-it"):
+    def __init__(self, model_name="google/gemma-2-2b-it:nebius"):
         # 1. Pull the token from Streamlit Secrets
         hf_token = st.secrets.get("HF_TOKEN")
         
