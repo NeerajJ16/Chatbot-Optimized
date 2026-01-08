@@ -1,0 +1,34 @@
+Humana Inc., FL, USA — AI Engineer
+Jan 2025 – Current
+
+Designed and implemented AI models using PyTorch and TensorFlow, improving disease-risk prediction accuracy by 30% and enabling proactive care management across healthcare programs.
+
+Developed Spark and Airflow pipelines on AWS Glue to automate ingestion from S3, Redshift, and Kafka, reducing batch latency by 72% for analytics workloads.
+
+Built MLOps infrastructure using MLflow, Docker, and Kubernetes, decreasing deployment time from 72 hours to 6 hours while maintaining 99.5% production uptime.
+
+Created LLM-based summarization solutions using LangChain, Hugging Face, and OpenAI API, reducing clinical documentation review time by 45% and improving accuracy in physician notes.
+
+Established HIPAA-compliant data governance using Snowflake RBAC, encryption, and lineage tracking to ensure regulatory adherence across patient and operational datasets.
+
+Deployed Power BI dashboards for AI-driven risk and performance metrics, improving care delivery efficiency by 33%.
+
+Partnered with cross-functional teams (data scientists, engineers, compliance) to operationalize ML models at scale aligned to business and regulatory goals.
+​
+
+CitiusTech, India — Data Engineer
+Sep 2020 – Aug 2023
+
+Developed PySpark and Databricks workflows on Azure Synapse, processing 8TB+ of healthcare data monthly and improving transformation performance by 36%.
+
+Automated ingestion pipelines from SQL Server, APIs, and MongoDB using Apache Airflow DAGs, reducing manual refresh cycles by 65% and increasing data reliability.
+
+Created dbt transformations and Delta Lake tables to standardize schemas, improving query performance and reducing redundancy across analytics platforms.
+
+Implemented data quality monitoring with Great Expectations and Azure Purview, reducing integrity issues by 31% and supporting GDPR/HIPAA compliance.
+
+Engineered Kafka streaming pipelines to enable real-time flow and alerting, reducing event latency by 25% in patient monitoring systems.
+
+Collaborated with BI developers to build Power BI dashboards integrating predictive analytics, increasing clinical data adoption by 60% across client teams.
+
+Optimized workflow scheduling and resource utilization in Azure Synapse, lowering ETL runtime by 28% and reducing compute costs via scaling and partitioning.

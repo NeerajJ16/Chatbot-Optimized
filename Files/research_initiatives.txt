@@ -1,0 +1,23 @@
+Florida State University — AI Researcher
+
+Focus: Large Language Models (LLMs), fine-tuning, and scalable NLP.
+
+Fine-tuned LLMs on datasets exceeding 50,000 examples using LoRA and PEFT, achieving 10–15% gains in task accuracy on models such as DistilGPT2.
+
+Built scalable NLP pipelines using Hugging Face and PyTorch.
+
+Applied mixed-precision training and batch tuning to reduce training time by 35%.
+
+Contributed to ParticleViz, an open-source visualization tool that displays Lagrangian particle simulations on interactive web maps, helping Earth Science researchers explore spatial and temporal patterns.
+
+ParticleViz link: https://olmozavala.github.io/particleviz/
+
+Learnscape AI — Founder and Developer
+
+Built LearnScape AI, an intelligent learning platform that generates personalized study roadmaps, quizzes, and flashcards using Retrieval-Augmented Generation (RAG) and LLM-based evaluation pipelines.
+
+Implemented a modular backend using FastAPI, dbt, and PostgreSQL to support scalable knowledge retrieval and progress tracking.
+
+Worked on knowledge evaluation, content generation, and user engagement optimization using fine-tuned LLMs and semantic search techniques.
+
+Learnscape AI link: https://learnscapeai.com/

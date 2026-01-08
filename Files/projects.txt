@@ -1,0 +1,23 @@
+Portfolio Assistant Chatbot
+
+Built a RAG-powered chatbot using ChromaDB, Cross Encoder, and FastAPI with an Ollama LLM.
+
+Delivered context-accurate responses with deterministic fallback behavior and production-grade API integration.
+​
+
+Roadmap Generator Using RAG
+
+Designed a semantic RAG pipeline using Pinecone, Sentence Transformers, and LangGraph.
+
+Achieved 90% retrieval accuracy and generated personalized study plans via Gemini API workflows.
+​
+
+Data-Driven Fitness Tracker
+
+Developed a predictive analytics system using Python and Scikit-learn.
+
+Improved personalized recommendation accuracy by 30% with real-time Matplotlib insights and validated model tuning.
+​
+
+
+More projects can be found at https://neerajj.netlify.app/archives/

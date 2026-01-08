@@ -1,0 +1,58 @@
+Programming
+
+Python, SQL, R, Scala, Java, Bash
+​
+
+Data Engineering
+
+Apache Airflow, Spark, PySpark, Kafka, Databricks, AWS Glue, dbt, Snowflake, Flink, Delta Lake
+​
+
+Databases / Warehousing
+
+MySQL, PostgreSQL, MongoDB, Redshift, BigQuery, Azure Synapse, Cassandra
+​
+
+Cloud Platforms
+
+AWS (S3, Lambda, EMR, SageMaker), Azure (Data Factory, Synapse), GCP (BigQuery, Vertex AI)
+​
+
+Machine Learning / AI
+
+TensorFlow, PyTorch, Scikit-learn, XGBoost, Hugging Face, LangChain, OpenAI API
+​
+
+MLOps / Deployment
+
+MLflow, Kubeflow, Docker, Kubernetes, Jenkins, GitHub Actions, SageMaker Pipelines
+​
+
+Visualization / BI
+
+Power BI, Tableau, Looker, Matplotlib, Plotly
+​
+
+Automation / Infrastructure
+
+Terraform, Ansible, Git, CI/CD, CloudWatch, Prometheus, Grafana
+​
+
+Data Security / Governance
+
+IAM, RBAC, Encryption, Data Quality, Lineage, GDPR, HIPAA
+​
+
+Analytics / Modeling
+
+Predictive Modeling, NLP, Deep Learning, Time-Series Forecasting, EDA
+​
+
+Methodologies
+
+Agile, DevOps, SDLC
+​
+
+Soft Skills
+
+Problem Solving, Collaboration, Communication, Continuous Learning

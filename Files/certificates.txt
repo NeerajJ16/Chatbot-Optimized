@@ -1,0 +1,17 @@
+Certifications
+
+Data Engineer – Data Integration (IBM-Techademy). [conversation_history]
+
+Software Development and Life Cycle (IBM-Techademy). [conversation_history]
+
+Cloud Computing with AWS. [conversation_history]
+
+Data Science: R Programming Complete Diploma 2023. [conversation_history]
+
+Web Penetration Testing. [conversation_history]
+
+Database Management with SQL. [conversation_history]
+
+Notes for RAG (optional metadata tags)
+
+Primary themes: Data engineering, SDLC, AWS cloud, R/data science, security testing, SQL/databases. [conversation_history]

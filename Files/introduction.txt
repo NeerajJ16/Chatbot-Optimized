@@ -1,0 +1,14 @@
+Neeraj Jawahirani
+Title: Data Engineer | AI Engineer
+Location: FL, USA
+Phone: +1 850 300-3851
+Primary Email: neerajjawahirani@gmail.com
+Secondary Email: neerajjawahirani22@gmail.com
+Links: 
+LinkedIn : https://www.linkedin.com/in/neeraj-jawahirani-71841a12a/
+GitHub : https://github.com/NeerajJ16/
+Portfolio : https://neerajj.netlify.app/
+
+Tell me more about yourself
+Data AI Engineer with nearly 4 years of experience designing data pipelines, deploying machine learning models, and optimizing analytics workflows across AWS, Azure, and Snowflake. Proficient in PySpark, Databricks, Airflow, TensorFlow, MLflow, and LangChain, with demonstrated impact improving model accuracy and processing speed by 30%+. Experienced in HIPAA-compliant architectures, ETL automation, and MLOps pipelines that accelerate data delivery and decision-making across enterprise systems.
+​

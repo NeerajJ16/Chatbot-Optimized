@@ -1,0 +1,49 @@
+Tell me about yourself
+Data AI Engineer with nearly 4 years of experience building scalable data pipelines and deploying ML/LLM solutions across AWS and Azure. Recent work includes Spark + Airflow pipelines on AWS Glue that reduced batch latency by 72%, and MLOps improvements using MLflow/Docker/Kubernetes that cut deployment time from 72 hours to 6 hours while sustaining 99.5% uptime. Strong fit for roles requiring end-to-end ownership—from ingestion and governance (HIPAA-compliant RBAC/encryption/lineage) to modeling, deployment, and BI dashboards.
+​
+
+What are your strengths and weaknesses?
+Strengths:
+
+Building reliable data pipelines and improving performance at scale (e.g., large healthcare datasets; significant latency/runtime reductions).
+​
+
+Shipping ML systems into production with MLOps practices (MLflow, Docker, Kubernetes) and measurable operational outcomes.
+​
+
+Working effectively in regulated environments by embedding governance and compliance into the architecture (HIPAA/GDPR-oriented controls).
+​
+
+Weakness (framed constructively):
+Tendency to go deep on optimization and robustness; to balance speed and quality, scope is now time-boxed and priorities are aligned early (MVP first, then iterate).
+
+Why should we hire you?
+Combination of strong data engineering fundamentals and proven AI/ML delivery in production: built pipelines that materially reduced latency, deployed ML/LLM capabilities that improved accuracy and reduced clinician review time, and implemented governance patterns suitable for healthcare environments. Able to contribute immediately to pipeline reliability, model deployment workflows, and cross-functional delivery where metrics and compliance matter.
+​
+
+Where do you see yourself in 5 years?
+Leading data engineering and AI initiatives as a senior/lead engineer—designing scalable platforms (batch + streaming), setting MLOps standards, and mentoring engineers while delivering real-world business outcomes in domains like healthcare analytics and applied AI.
+​
+
+What is your biggest achievement?
+Two standout achievements: (1) building production ML and MLOps systems that improved disease-risk prediction accuracy by 30% while reducing deployment time from 72 hours to 6 hours and maintaining 99.5% uptime; (2) creating data pipelines that reduced batch latency by 72% and enabled faster analytics decision-making.
+​
+
+Tell me about a challenge you faced at work and how you solved it
+A recurring challenge in healthcare data systems is delivering faster analytics without sacrificing reliability or compliance. By redesigning ingestion and processing using Spark + Airflow on AWS Glue, automating feeds from S3/Redshift/Kafka, and enforcing governance controls (RBAC/encryption/lineage in Snowflake), batch latency dropped significantly while maintaining strong operational stability and regulatory alignment.
+​
+
+How do you handle tight deadlines or pressure?
+Pressure is handled by triaging for impact, breaking work into small deliverables, and communicating tradeoffs early. In practice, that means shipping a safe baseline quickly (monitoring, rollback plan, data quality checks), then iterating—an approach aligned with maintaining high uptime and reducing deployment cycles in production workflows.
+​
+
+Describe a time when you worked in a team
+At Humana, work required close coordination across data science, engineering, and compliance to operationalize ML models and LLM workflows in a regulated environment. That collaboration helped move models into production with strong uptime, measurable performance improvements, and governance that met healthcare requirements.
+​
+
+What motivates you the most?
+Motivation comes from measurable impact—cutting latency, improving model accuracy, reducing manual review time, and seeing dashboards/models influence real decisions. Projects like RAG systems and LLM summarization are especially motivating because they combine engineering scale with visible user outcomes.
+​
+
+What are your salary expectations?
+Open to a fair market-aligned offer based on role scope, level, location, and total compensation. Priority is joining a team where data engineering + AI work is production-focused and impact-driven, with clear growth opportunities.
