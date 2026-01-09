@@ -1,21 +1,25 @@
-import pickle
-import numpy as np
-from sentence_transformers import SentenceTransformer
-from sklearn.metrics.pairwise import cosine_similarity
-#from rag.llm_phi2 import Phi2LLM  # your local phi-2 wrapper
-from rag.llm_phi2 import get_llm
-from rag.chunker import Chunk  # use your Chunk dataclass
+# rag/query_rag_langchain.py
+
 import re
+from langchain.vectorstores import FAISS
+from langchain.embeddings import HuggingFaceEmbeddings
+from rag.llm_phi2 import get_llm
 
-EMBEDDINGS_PATH = "data/chunks.pkl"  # contains list of Chunk objects
+# --------------------
+# Configuration
+# --------------------
+VECTORSTORE_PATH = "data/faiss_index"
 EMBEDDING_MODEL = "sentence-transformers/all-MiniLM-L6-v2"
-TOP_K = 5  # number of chunks to retrieve
+TOP_K = 5
 
 
+# --------------------
+# Utility: date extraction (your logic)
+# --------------------
 def extract_date_key(text):
     """
-    Returns a sortable date key (year, month) if present.
-    Falls back to (0, 0) if no date is found.
+    Returns a sortable (year, month) tuple if a date is found.
+    Falls back to (0, 0) if no date exists.
     """
     year_match = re.findall(r"\b(19\d{2}|20\d{2})\b", text)
     month_match = re.findall(
@@ -24,109 +28,114 @@ def extract_date_key(text):
     )
 
     year = int(year_match[-1]) if year_match else 0
-    month = month_match[-1] if month_match else ""
 
     month_map = {
-        "jan":1,"feb":2,"mar":3,"apr":4,"may":5,"jun":6,
-        "jul":7,"aug":8,"sep":9,"oct":10,"nov":11,"dec":12
+        "jan": 1, "feb": 2, "mar": 3, "apr": 4,
+        "may": 5, "jun": 6, "jul": 7, "aug": 8,
+        "sep": 9, "oct": 10, "nov": 11, "dec": 12
     }
 
-    return (year, month_map.get(month, 0))
+    month = month_map.get(month_match[-1], 0) if month_match else 0
+    return (year, month)
 
 
-def reorder_chunks_for_query(query, chunks):
+# --------------------
+# Utility: reorder for "latest" queries
+# --------------------
+def reorder_chunks_for_query(query, docs):
     q = query.lower()
 
     if any(word in q for word in ["recent", "latest", "current", "most recent"]):
         return sorted(
-            chunks,
-            key=lambda c: extract_date_key(c.text),
+            docs,
+            key=lambda d: extract_date_key(d.page_content),
             reverse=True
         )
 
-    return chunks
+    return docs
 
 
-# Load chunks and embeddings from FAISS or pickle
-def load_chunks_and_embeddings(file_path=EMBEDDINGS_PATH):
-    with open(file_path, "rb") as f:
-        data = pickle.load(f)
-    # Assuming each Chunk has a precomputed embedding attribute, else compute here
-    chunks = data  # list of Chunk objects
-    return chunks
+# --------------------
+# Load vector store
+# --------------------
+def load_vectorstore():
+    embeddings = HuggingFaceEmbeddings(
+        model_name=EMBEDDING_MODEL
+    )
+
+    return FAISS.load_local(
+        VECTORSTORE_PATH,
+        embeddings,
+        allow_dangerous_deserialization=True
+    )
 
 
-def embed_chunks(chunks, model_name=EMBEDDING_MODEL):
-    """Compute embeddings for chunks if not already stored."""
-    model = SentenceTransformer(model_name)
-    texts = [c.text for c in chunks]
-    embeddings = model.encode(texts, show_progress_bar=True)
-    return embeddings
+# --------------------
+# Retrieve documents
+# --------------------
+def retrieve_documents(query, vectorstore):
+    """
+    Uses FAISS similarity search.
+    Returns list of (Document, score).
+    """
+    return vectorstore.similarity_search_with_score(
+        query,
+        k=TOP_K
+    )
 
 
-def retrieve_chunks(query, chunks, embeddings, top_k=TOP_K):
-    """Retrieve top-k relevant chunks using cosine similarity."""
-    model = SentenceTransformer(EMBEDDING_MODEL)
-    query_emb = model.encode([query])
-    scores = cosine_similarity(query_emb, embeddings)[0]
-    top_indices = np.argsort(scores)[::-1][:top_k]
-    return [chunks[i] for i in top_indices], [scores[i] for i in top_indices]
+# --------------------
+# Build context for LLM
+# --------------------
+def build_context(docs):
+    """
+    Formats retrieved documents into a single context string.
+    """
+    return "\n\n".join(
+        f"{doc.metadata.get('section', '').upper()}: {doc.page_content}"
+        for doc in docs
+    )
 
 
-def retrieve_chunks_by_section(query, chunks, embeddings, top_k=TOP_K):
-    """Filter chunks by section if query matches section name."""
-    section_names = {c.section.lower() for c in chunks}
-    query_lower = query.lower()
-    matched_section = None
-    for sec in section_names:
-        if sec in query_lower:
-            matched_section = sec
-            break
+# --------------------
+# Full RAG pipeline
+# --------------------
+def answer_question(query, vectorstore):
+    results = retrieve_documents(query, vectorstore)
 
-    if matched_section:
-        filtered_chunks = [c for c in chunks if c.section.lower() == matched_section]
-        filtered_embeddings = np.array([embeddings[i] for i, c in enumerate(chunks) if c.section.lower() == matched_section])
-    else:
-        filtered_chunks = chunks
-        filtered_embeddings = embeddings
+    docs = [doc for doc, _ in results]
+    scores = [score for _, score in results]
 
-    return retrieve_chunks(query, filtered_chunks, filtered_embeddings, top_k)
+    # Apply your custom ranking logic
+    docs = reorder_chunks_for_query(query, docs)
 
-
-def build_context(chunks):
-    """Join retrieved chunks into a context string for LLM."""
-    return "\n\n".join([f"{c.section.upper()}: {c.text}" for c in chunks])
-
-
-def answer_question(query, chunks, embeddings):
-    """Full RAG pipeline: retrieval + LLM answer generation."""
-    top_chunks, scores = retrieve_chunks_by_section(query, chunks, embeddings)
-    top_chunks = reorder_chunks_for_query(query, top_chunks)
-    context = build_context(top_chunks)
-
+    # Debug output (same spirit as your original code)
     print("\nTop retrieved chunks:")
-    for i, (c, score) in enumerate(zip(top_chunks, scores), 1):
-        print(f"{i}. Source: {c.source}, Section: {c.section}, Score: {score:.4f}")
-        print(f"Text preview: {c.text[:300]}...\n")
+    for i, (doc, score) in enumerate(zip(docs, scores), 1):
+        print(
+            f"{i}. Source: {doc.metadata.get('source')}, "
+            f"Section: {doc.metadata.get('section')}, "
+            f"Score: {score:.4f}"
+        )
+        print(f"Text preview: {doc.page_content[:300]}...\n")
 
-    context = build_context(top_chunks)
+    context = build_context(docs)
 
-    # Generate answer using Phi-2 (CPU-friendly small model)
     llm = get_llm()
-    answer = llm.generate_answer(context, query)
-    return answer
+    return llm.generate_answer(context, query)
 
 
+# --------------------
+# Interactive loop
+# --------------------
 if __name__ == "__main__":
-    print("Loading chunks and embeddings...")
-    chunks = load_chunks_and_embeddings()
-    embeddings = embed_chunks(chunks)
-    print(f"Loaded {len(chunks)} chunks, embeddings shape: {embeddings.shape}")
+    print("Loading vector store...")
+    vectorstore = load_vectorstore()
 
     while True:
         query = input("\nEnter your question (or 'exit'): ").strip()
         if query.lower() == "exit":
             break
 
-        answer = answer_question(query, chunks, embeddings)
+        answer = answer_question(query, vectorstore)
         print("\nANSWER:\n", answer)

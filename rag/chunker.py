@@ -1,8 +1,9 @@
-# rag/chunker.py
 import os
-import pickle
 import re
-from rag.schema import Chunk
+import pickle
+from langchain.document_loaders import TextLoader
+from langchain.text_splitter import RecursiveCharacterTextSplitter
+from langchain.schema import Document
 
 FILES_DIR = "Files"
 OUTPUT_PATH = "data/chunks.pkl"
@@ -11,71 +12,47 @@ MIN_CHARS = 150
 MAX_CHARS = 800
 
 
-def load_files():
-    documents = []
-
-    for filename in os.listdir(FILES_DIR):
-        if filename.endswith(".txt"):
-            path = os.path.join(FILES_DIR, filename)
-
-            with open(path, "r", encoding="utf-8") as f:
-                text = f.read()
-
-            documents.append({
-                "section": filename.replace(".txt", ""),
-                "source": filename,
-                "text": text
-            })
-
-    return documents
-
-
 def clean_text(text: str) -> str:
     text = re.sub(r"\[conversation_history\]", "", text)
     text = re.sub(r"\s+", " ", text)
     return text.strip()
 
 
-def semantic_chunk(text: str):
-    lines = [clean_text(l) for l in text.split("\n") if clean_text(l)]
-    chunks = []
+def load_documents():
+    documents = []
 
-    buffer = ""
+    for filename in os.listdir(FILES_DIR):
+        if filename.endswith(".txt"):
+            path = os.path.join(FILES_DIR, filename)
 
-    for line in lines:
-        # Merge until chunk is meaningful
-        if len(buffer) < MIN_CHARS:
-            buffer += " " + line
-        else:
-            chunks.append(buffer.strip())
-            buffer = line
+            loader = TextLoader(path, encoding="utf-8")
+            docs = loader.load()
 
-        # Hard cap
-        if len(buffer) >= MAX_CHARS:
-            chunks.append(buffer.strip())
-            buffer = ""
+            for doc in docs:
+                doc.page_content = clean_text(doc.page_content)
+                doc.metadata = {
+                    "source": filename,
+                    "section": filename.replace(".txt", "")
+                }
+                documents.append(doc)
 
-    if buffer.strip():
-        chunks.append(buffer.strip())
-
-    return chunks
+    return documents
 
 
-def create_chunks():
-    documents = load_files()
-    chunks = []
+def chunk_documents(documents):
+    splitter = RecursiveCharacterTextSplitter(
+        chunk_size=MAX_CHARS,
+        chunk_overlap=100,
+        separators=["\n\n", "\n", ".", " ", ""]
+    )
 
-    for doc in documents:
-        semantic_chunks = semantic_chunk(doc["text"])
+    chunks = splitter.split_documents(documents)
 
-        for chunk_text in semantic_chunks:
-            chunks.append(
-                Chunk(
-                    source=doc["source"],
-                    section=doc["section"],
-                    text=chunk_text
-                )
-            )
+    # Optional: enforce minimum size
+    chunks = [
+        chunk for chunk in chunks
+        if len(chunk.page_content) >= MIN_CHARS
+    ]
 
     return chunks
 
@@ -90,5 +67,6 @@ def save_chunks(chunks):
 
 
 if __name__ == "__main__":
-    chunks = create_chunks()
+    docs = load_documents()
+    chunks = chunk_documents(docs)
     save_chunks(chunks)

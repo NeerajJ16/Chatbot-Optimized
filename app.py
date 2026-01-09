@@ -1,10 +1,12 @@
 import streamlit as st
 from rag.query_rag import (
-    load_chunks_and_embeddings,
-    embed_chunks,
+    load_vectorstore,
     answer_question
 )
 
+# -------------------------
+# Page config
+# -------------------------
 st.set_page_config(
     page_title="Portfolio Chatbot (Streamlit)",
     page_icon="💬",
@@ -19,11 +21,9 @@ st.caption("Ask about education, experience, projects, research, or skills")
 # -------------------------
 @st.cache_resource
 def load_rag():
-    chunks = load_chunks_and_embeddings()
-    embeddings = embed_chunks(chunks)
-    return chunks, embeddings
+    return load_vectorstore()
 
-chunks, embeddings = load_rag()
+vectorstore = load_rag()
 
 # -------------------------
 # Session state
@@ -55,7 +55,7 @@ if question:
     # Assistant response
     with st.chat_message("assistant"):
         with st.spinner("Thinking..."):
-            answer = answer_question(question, chunks, embeddings)
+            answer = answer_question(question, vectorstore)
             st.markdown(answer)
 
     st.session_state.chat.append({
